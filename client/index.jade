@@ -14,7 +14,7 @@ html(lang='en', ng-app='daytrader')
       .row
         .col-xs-12
           h1 Day Trader
-          h2(ng-show='userFormHide') User: {{user.userName}} Balance: {{user.userBalance | currency}}
+          h2(ng-show='userFormHide') User: {{user.userName}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Balance: {{user.userBalance | currency}}
           form(name='userForm', ng-hide='userFormHide')
             .form-group
               label(for='name') Name
@@ -53,11 +53,11 @@ html(lang='en', ng-app='daytrader')
                 th Total Cost
                 th Sell
             tbody
-              tr(ng-repeat='item in sector', ng-if='item.name.length > 0')
+              tr(ng-repeat='(key, item) in sector', ng-if='item.name.length > 0')
                 td {{item.name | uppercase}}
                 td {{item.quantity}}
                 td {{item.position | currency}}
-                td: button.btn.btn-primary.btn-sm(ng-click='removeStock(sector, item)') Sell
+                td: button.btn.btn-primary.btn-sm(ng-click='removeStock(item, key, sector)') Sell
             tfoot
               tr
                 td
