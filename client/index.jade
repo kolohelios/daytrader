@@ -27,31 +27,34 @@ html(lang='en', ng-app='daytrader')
             .form-group
               label(for='sector') Sector
               input#sector.form-control(type='text', name='sector', ng-model='sector.name')
-            button(ng-click='createSector()') Create Sector
+            button.btn.btn-primary(ng-click='createSector()') Create Sector
         .col-xs-6
           form(name='stockForm')
             .form-group
               label(for='symbol') Symbol
               input#symbol.form-control(type='text', name='symbol', ng-model='stock.name')
-              select#sectorSelector.form-control(name='sectorSelector', value='{{sector.name}}')
-                option(ng-repeat='sector in sectors') {{sector.name}}
+              select#sectorSelector.form-control(name='sectorSelector', ng-model='stock.sector')
+                option(ng-repeat='sector in sectors') {{$value}}
             .form-group
               label(for='quantity') Quantity
               input#quantity.form-control(type='number', name='quantity', ng-model='stock.quantity')
-            button(ng-click='buyStock()') Buy Stock
+            button.btn.btn-primary(ng-click='buyStock()') Buy Stock
       .row
-        .col-xs-4
+        .col-xs-4(ng-repeat='sector in sectors')
+          h2 {{sector.name}}
           table.table.table-striped
             thead
-              th
-                td Symbol
-                td Quantity
-                td Total Cost
-            tbody
               tr
-                td X-UA-Compatible
-                td x
-                td x
+                th Symbol
+                th Quantity
+                th Position
+                th Sell
+            tbody
+              tr(ng-repeat='stock in stocks')
+                td {{stock.symbol}}
+                td {{stock.quantity}}
+                td {{stock.position}}
+                td: button.btn.btn-primary(ng-click='sellStock(stock)') Sell
     
     
     script(src='/vendor/jquery/dist/jquery.min.js')

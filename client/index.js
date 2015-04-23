@@ -23,22 +23,30 @@ angular.module('daytrader', ['firebase'])
 
   $scope.saveUser = function(){
     afUser.$save($scope.user);
-
   };
 
   $scope.createSector = function(){
     console.log($scope.sector.name);
     //$scope.sector.stocks = [];
     //$scope.sector.value = 0;
-    afSectors.$add($scope.sector).then(function(){
+    fbSectors.child($scope.sector.name).push({
+      stocks: 0
+    });
+    //afSectors.$add($scope.sector).then(function(){
       //$scope.selectedSector = $scope.sector;
       // add code to select new sector as option in dropdown
-    });
+    //});
     $scope.sector = {};
   };
 
   $scope.buyStock = function(){
     console.log('in buy stock function');
+    console.log($scope.stock);
+    fbSectors.child($scope.sector.name).push($scope.stock);
+    //var record = afSectors.$getRecord($scope.stock.sector.$id);
+    //console.log(record);
+    //$add($scope.stock);
+
   }
 
 }]);
