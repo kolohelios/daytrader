@@ -24,19 +24,13 @@ angular.module('daytrader', ['firebase'])
 
   $scope.saveUser = function(){
     afUser.$save($scope.user);
+    $scope.userFormHide = true;
   };
 
   $scope.createSector = function(){
     console.log($scope.sector.name);
-    //$scope.sector.stocks = [];
-    //$scope.sector.value = 0;
-    fbSectors.child($scope.sector.name).push({
-      stocks: 0
-    });
-    //afSectors.$add($scope.sector).then(function(){
-      //$scope.selectedSector = $scope.sector;
-      // add code to select new sector as option in dropdown
-    //});
+    $scope.sector.sectorTotal = 0;
+    afSectors.$add($scope.sector);
     $scope.sector = {};
   };
 
@@ -52,12 +46,18 @@ angular.module('daytrader', ['firebase'])
       return;
     }
     console.log('in buy stock function');
-    console.log($scope.stock);
-    fbSectors.child($scope.sector.name).push($scope.stock);
-    //var record = afSectors.$getRecord($scope.stock.sector.$id);
-    //console.log(record);
-    //$add($scope.stock);
+    var rec = afSectors.$getRecord($scope.sectorToAddTo);
+    var testArray = fbSectors.child(rec.$id);
+    var afTestArray = $firebaseArray(testArray);
+    $scope.user.userBalance -= $scope.stock.position;
+    rec.sectorTotal += $scope.stock.position * 1;
+    afSectors.$save(rec);
+    afTestArray.$add($scope.stock);
+    $scope.stock = {};
+  }
 
+  function sectorTotal(sector){
+    $scope.sectors
   }
 
 }]);

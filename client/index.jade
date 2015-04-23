@@ -28,18 +28,20 @@ html(lang='en', ng-app='daytrader')
             .form-group
               label(for='sector') Sector
               input#sector.form-control(type='text', name='sector', ng-model='sector.name')
-            button.btn.btn-primary(ng-click='createSector()') Create Sector
+            button(ng-click='createSector()') Create Sector
         .col-xs-6
           form(name='stockForm')
             .form-group
               label(for='symbol') Symbol
               input#symbol.form-control(type='text', name='symbol', ng-model='stock.name')
-              select#sectorSelector.form-control(name='sectorSelector', ng-model='stock.sector')
-                option(ng-repeat='sector in sectors') {{$value}}
+            .form-group
+              label(for='sectorSelector') Sector
+              select#sectorSelector.form-control(name='sectorSelector', ng-model='sectorToAddTo')
+                option(ng-repeat='sector in sectors', value='{{sector.$id}}') {{sector.name}}
             .form-group
               label(for='quantity') Quantity
               input#quantity.form-control(type='number', name='quantity', ng-model='stock.quantity')
-            button.btn.btn-primary(ng-click='buyStock()') Buy Stock
+            button(ng-click='addStock()') Buy Stock
       .row
         .col-xs-4(ng-repeat='sector in sectors')
           h2 {{sector.name}}
@@ -48,16 +50,21 @@ html(lang='en', ng-app='daytrader')
               tr
                 th Symbol
                 th Quantity
-                th Position
+                th Total Cost
                 th Sell
             tbody
-              tr(ng-repeat='stock in stocks')
-                td {{stock.symbol}}
-                td {{stock.quantity}}
-                td {{stock.position}}
-                td: button.btn.btn-primary(ng-click='sellStock(stock)') Sell
-    
-    
+              tr(ng-repeat='item in sector', ng-show='!($last)')
+                td {{item.name | uppercase}}
+                td {{item.quantity}}
+                td {{item.position | currency}}
+                td: button.btn.btn-primary.btn-sm(ng-click='removeStock()') Sell
+            tfoot
+              tr
+                td
+                td
+                td {{sector.sectorTotal | currency}}
+                td
+
     script(src='/vendor/jquery/dist/jquery.min.js')
     script(src='/vendor/bootstrap/dist/js/bootstrap.min.js')
     script(src='/vendor/lodash/lodash.min.js')
