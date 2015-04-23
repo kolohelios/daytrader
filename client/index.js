@@ -2,6 +2,7 @@
 
 angular.module('daytrader', ['firebase'])
 .run(['$rootScope', '$window', function($rootScope, $window){
+  $rootScope.sectorKeys = [];
   $rootScope.fbRoot = new $window.Firebase('https://daytrader-kolohelios.firebaseio.com/');
 }])
 .controller('master', ['$scope', '$firebaseObject', '$firebaseArray', '$http', function($scope, $firebaseObject, $firebaseArray, $http){
@@ -23,22 +24,40 @@ angular.module('daytrader', ['firebase'])
 
   $scope.saveUser = function(){
     afUser.$save($scope.user);
-
+    $scope.userFormHide = true;
   };
 
   $scope.createSector = function(){
     console.log($scope.sector.name);
-    //$scope.sector.stocks = [];
-    //$scope.sector.value = 0;
-    afSectors.$add($scope.sector).then(function(){
-      //$scope.selectedSector = $scope.sector;
-      // add code to select new sector as option in dropdown
-    });
+    $scope.sector.sectorTotal = 0;
+    afSectors.$add($scope.sector);
     $scope.sector = {};
   };
 
-  $scope.buyStock = function(){
+  $scope.addStock = function(){
+      $http.jsonp('http://dev.markitondemand.com/Api/v2/Quote/jsonp?symbol=' + $scope.stock.name.toUpperCase() + '&callback=JSON_CALLBACK').then(function(response){
+        buyStock(response.data.LastPrice);
+      });
+  };
+  function buyStock(quote){
+    $scope.stock.position = (quote * $scope.stock.quantity).toFixed(2);
+    if ($scope.stock.position > $scope.user.userBalance){
+      alert("You don't have enough money for that purchase");
+      return;
+    }
     console.log('in buy stock function');
+    var rec = afSectors.$getRecord($scope.sectorToAddTo);
+    var testArray = fbSectors.child(rec.$id);
+    var afTestArray = $firebaseArray(testArray);
+    $scope.user.userBalance -= $scope.stock.position;
+    rec.sectorTotal += $scope.stock.position * 1;
+    afSectors.$save(rec);
+    afTestArray.$add($scope.stock);
+    $scope.stock = {};
+  }
+
+  function sectorTotal(sector){
+    $scope.sectors
   }
 
 }]);
