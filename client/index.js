@@ -2,6 +2,7 @@
 
 angular.module('daytrader', ['firebase'])
 .run(['$rootScope', '$window', function($rootScope, $window){
+  $rootScope.sectorKeys = [];
   $rootScope.fbRoot = new $window.Firebase('https://daytrader-kolohelios.firebaseio.com/');
 }])
 .controller('master', ['$scope', '$firebaseObject', '$firebaseArray', '$http', function($scope, $firebaseObject, $firebaseArray, $http){
@@ -39,7 +40,17 @@ angular.module('daytrader', ['firebase'])
     $scope.sector = {};
   };
 
-  $scope.buyStock = function(){
+  $scope.addStock = function(){
+      $http.jsonp('http://dev.markitondemand.com/Api/v2/Quote/jsonp?symbol=' + $scope.stock.name.toUpperCase() + '&callback=JSON_CALLBACK').then(function(response){
+        buyStock(response.data.LastPrice);
+      });
+  };
+  function buyStock(quote){
+    $scope.stock.position = (quote * $scope.stock.quantity).toFixed(2);
+    if ($scope.stock.position > $scope.user.userBalance){
+      alert("You don't have enough money for that purchase");
+      return;
+    }
     console.log('in buy stock function');
     console.log($scope.stock);
     fbSectors.child($scope.sector.name).push($scope.stock);

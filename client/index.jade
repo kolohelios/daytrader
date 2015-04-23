@@ -14,7 +14,8 @@ html(lang='en', ng-app='daytrader')
       .row
         .col-xs-12
           h1 Day Trader
-          form(name='userForm')
+          h2(ng-show='userFormHide') User: {{user.userName}} Balance: {{user.userBalance | currency}}
+          form(name='userForm', ng-hide='userFormHide')
             .form-group
               label(for='name') Name
               input#name.form-control(type='text', name='name', ng-model='user.userName')
