@@ -53,11 +53,11 @@ html(lang='en', ng-app='daytrader')
                 th Total Cost
                 th Sell
             tbody
-              tr(ng-repeat='item in sector', ng-show='!($last)')
+              tr(ng-repeat='item in sector', ng-if='item.name.length > 0')
                 td {{item.name | uppercase}}
                 td {{item.quantity}}
                 td {{item.position | currency}}
-                td: button.btn.btn-primary.btn-sm(ng-click='removeStock()') Sell
+                td: button.btn.btn-primary.btn-sm(ng-click='removeStock(sector, item)') Sell
             tfoot
               tr
                 td

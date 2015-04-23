@@ -50,6 +50,7 @@ angular.module('daytrader', ['firebase'])
     var testArray = fbSectors.child(rec.$id);
     var afTestArray = $firebaseArray(testArray);
     $scope.user.userBalance -= $scope.stock.position;
+    afUser.$save($scope.user);
     rec.sectorTotal += $scope.stock.position * 1;
     afSectors.$save(rec);
     afTestArray.$add($scope.stock);
@@ -58,6 +59,29 @@ angular.module('daytrader', ['firebase'])
 
   function sectorTotal(sector){
     $scope.sectors
+  }
+
+  $scope.removeStock = function(sector, stock){
+      // $http.jsonp('http://dev.markitondemand.com/Api/v2/Quote/jsonp?symbol=' + stock.name.toUpperCase() + '&callback=JSON_CALLBACK').then(function(response){
+      //   sellStock(sector, stock, response.data.LastPrice);
+      // });
+  };
+
+  function sellStock(sector, stock, quote){
+    // console.log(sector, stock, quote)
+    // var sellPrice = quote * stock.quantity;
+    // // var rec = afSectors.$getRecord($scope.sectorToAddTo);
+    // console.log(sector.$id);
+    // var testArray = fbSectors.child(sector.$id);
+    // var afTestArray = $firebaseArray(testArray);
+    // $scope.user.userBalance += sellPrice;
+    // sector.stock = null;
+    // afSectors.$save(sector);
+    // afUser.$save($scope.user);
+    // //afTestArray.$remove(stock);
+    // afSectors.$remove(stock);
+    // //$scope.sector.splice(stock.$index, 1);
+    // debugger;
   }
 
 }]);
