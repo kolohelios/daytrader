@@ -35,7 +35,23 @@ html(lang='en', ng-app='daytrader')
               input#symbol.form-control(type='text', name='symbol', ng-model='stock.name')
               select#sectorSelector.form-control(name='sectorSelector', value='{{sector.name}}')
                 option(ng-repeat='sector in sectors') {{sector.name}}
-            
+            .form-group
+              label(for='quantity') Quantity
+              input#quantity.form-control(type='number', name='quantity', ng-model='stock.quantity')
+            button(ng-click='buyStock()') Buy Stock
+      .row
+        .col-xs-4
+          table.table.table-striped
+            thead
+              th
+                td Symbol
+                td Quantity
+                td Total Cost
+            tbody
+              tr
+                td X-UA-Compatible
+                td x
+                td x
     
     
     script(src='/vendor/jquery/dist/jquery.min.js')

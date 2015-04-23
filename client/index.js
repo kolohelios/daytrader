@@ -37,4 +37,8 @@ angular.module('daytrader', ['firebase'])
     $scope.sector = {};
   };
 
+  $scope.buyStock = function(){
+    console.log('in buy stock function');
+  }
+
 }]);
