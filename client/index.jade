@@ -1,20 +1,43 @@
 doctype html
-html(lang='en', ng-app='poseidon')
+html(lang='en', ng-app='daytrader')
   head
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    title Poseidon
-    link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/superhero/bootstrap.min.css')
+    title Day Trader
+    link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cosmo/bootstrap.min.css')
     link(rel='stylesheet', href='/vendor/font-awesome/css/font-awesome.min.css')
     link(rel='stylesheet', href=isProd ? '/index.min.css' : '/index.css')
     link(rel='shortcut icon', href='/favicon.ico')
-  body
+  body(ng-controller='master')
     .container-fluid
       .row
         .col-xs-12
-          h1 Poseidon
-
+          h1 Day Trader
+          form(name='userForm')
+            .form-group
+              label(for='name') Name
+              input#name.form-control(type='text', name='name', ng-model='user.userName')
+            .form-group
+              label(for='balance') Balance
+              input#balance.form-control(type='number', name='balance', value='50000', ng-model='user.userBalance')
+            button(ng-click='saveUser()') Save User
+        .col-xs-6
+          form(name='sectorForm')
+            .form-group
+              label(for='sector') Sector
+              input#sector.form-control(type='text', name='sector', ng-model='sector.name')
+            button(ng-click='createSector()') Create Sector
+        .col-xs-6
+          form(name='stockForm')
+            .form-group
+              label(for='symbol') Symbol
+              input#symbol.form-control(type='text', name='symbol', ng-model='stock.name')
+              select#sectorSelector.form-control(name='sectorSelector', value='{{sector.name}}')
+                option(ng-repeat='sector in sectors') {{sector.name}}
+            
+    
+    
     script(src='/vendor/jquery/dist/jquery.min.js')
     script(src='/vendor/bootstrap/dist/js/bootstrap.min.js')
     script(src='/vendor/lodash/lodash.min.js')
