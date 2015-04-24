@@ -28,6 +28,6 @@
     "gulp-watch": "^4.2.4",
     "jshint-stylish": "^1.0.1",
     "rimraf": "^2.3.2",
-    "run-sequence": "^1.0.2"
+    "run-sequence": "^1.1.0"
   }
 }

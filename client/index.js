@@ -3,7 +3,7 @@
 angular.module('daytrader', ['firebase'])
 .run(['$rootScope', '$window', function($rootScope, $window){
   $rootScope.sectorKeys = [];
-  $rootScope.fbRoot = new $window.Firebase('https://daytrader-kolohelios.firebaseio.com/');
+  $rootScope.fbRoot = new $window.Firebase('https://daytrade.firebaseio.com/');
 }])
 .controller('master', ['$scope', '$firebaseObject', '$firebaseArray', '$http', function($scope, $firebaseObject, $firebaseArray, $http){
 
@@ -15,9 +15,22 @@ angular.module('daytrader', ['firebase'])
   $scope.user = afUser;
   $scope.sectors = afSectors;
 
+  // if (afUser){
+  //   $scope.userFormHide = true;
+  // }
+  if (afSectors.length > 0){
+    calculateSectorTotal();
+  }
+
   function getStockQuote(symbol){
-    $http.jsonp('http://dev.markitondemand.com/Api/v2/Quote/jsonp?symbol=' + symbol + '&callback=JSON_CALLBACK').then(function(response){
+    $http.jsonp('http://dev.markitondemand.com/Api/v2/Quote/jsonp?symbol=' + symbol + '&callback=JSON_CALLBACK')
+    .then(function(response){
       return response.data.LastPrice;
+    })
+    .catch(function(error){
+      alert('An error occured while attempting to get the price for the specified ticker symbol!!  Please check your ticker for correctness and try again.');
+      $scope.sector = {};
+      return;
     });
   }
   getStockQuote('AAPL');
@@ -50,14 +63,12 @@ angular.module('daytrader', ['firebase'])
     var afTestArray = $firebaseArray(testArray);
     $scope.user.userBalance -= $scope.stock.position;
     afUser.$save($scope.user);
+    console.log('$scope.user: ', $scope.user);
     rec.sectorTotal += $scope.stock.position * 1;
     afSectors.$save(rec);
     afTestArray.$add($scope.stock);
     $scope.stock = {};
-  }
-
-  function sectorTotal(sector){
-    $scope.sectors
+    // calculateSectorTotal();
   }
 
   $scope.removeStock = function(stock, key, sector){
@@ -78,6 +89,17 @@ angular.module('daytrader', ['firebase'])
     rec.sectorTotal -= sellPrice * 1;
     afSectors.$save(rec);
     afTestObject.$remove();
+    // calculateSectorTotal();
   }
+
+  function calculateSectorTotal(){
+    $scope.investmentTotal = 0;
+    var rec;
+    afSectors.forEach(function(folio){
+      rec = afSectors.$getRecord(folio.$id);
+      $scope.investmentTotal += rec.sectorTotal;
+    });
+  }
+  $scope.calculateSectorTotal = calculateSectorTotal;
 
 }]);
